@@ -1,4 +1,4 @@
-FROM registry.pro-eu-west-1.openshift.com/looped-lines/web-app-builder-base
+FROM loopedlines/javascript-app-builder-base
 
 WORKDIR /root/project
 
