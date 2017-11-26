@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "sudo docker run --env GITHUB_TOKEN=$(pass show github/Builder_JS_Tester_Token) --tty --volume $(pwd):/root/project/:z gulp test"
+    "test": "sudo docker run --env GITHUB_TOKEN=$(pass show github/Builder_JS_Tester_Token) --tty --volume $(pwd):/root/project/:z loopedlines/gulp test"
   },
   "repository": {
     "type": "git",

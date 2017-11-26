@@ -11,7 +11,7 @@ The tests should be executed inside a docker container. The docker file is inclu
 If you are using bash please add the `gulp-docker` alias to the `~/.bashrc`
 
 ```bash
-alias gulp-docker='sudo docker run --env GITHUB_TOKEN=$(pass show github/Builder_JS_Tester_Token) --tty --volume $(pwd):/root/project/:z gulp'`
+alias gulp-docker='sudo docker run --env GITHUB_TOKEN=$(pass show github/Builder_JS_Tester_Token) --tty --volume $(pwd):/root/project/:z loopedlines/gulp'`
 ```
 
 ### Fish Function
@@ -22,7 +22,7 @@ If you are using [fish](https://fishshell.com/) please:
 
 ```fish
 function gulp-docker
-	sudo docker run --env GITHUB_TOKEN=(pass show github/Builder_JS_Tester_Token) --tty --volume (pwd):/root/project/:z gulp $argv
+	sudo docker run --env GITHUB_TOKEN=(pass show github/Builder_JS_Tester_Token) --tty --volume (pwd):/root/project/:z loopedlines/gulp $argv
 end
 ```
 
