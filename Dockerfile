@@ -1,4 +1,4 @@
-FROM loopedlines/javascript-app-builder-base
+FROM registry.hub.docker.com/loopedlines/javascript-app-builder-base
 
 WORKDIR /root/project
 
