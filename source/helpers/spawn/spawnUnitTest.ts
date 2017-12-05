@@ -1,5 +1,5 @@
-import {spawn , SpawnFunc} from './spawn';
-import {createSpawnMock} from '../../mocks/spawnMock';
+import {spawn , NativeSpawnFunc} from './spawn';
+import {createNativeSpawnMock} from '../../mocks/nativeSpawnMock';
 
 describe('Given a command line command that will produce errors and valid information', function () {
     let messages: Array<string> = [
@@ -18,16 +18,16 @@ describe('Given a command line command that will produce errors and valid inform
         ];
 
     describe('And that command exits with a zero exit code', function () {
-        let nativeSpawnMock: SpawnFunc,
+        let nativeSpawnMock: NativeSpawnFunc,
             actual: Array<string> = [];
 
         beforeEach(function () {
-            nativeSpawnMock = createSpawnMock('ping', messages, errors, 0)
+            nativeSpawnMock = createNativeSpawnMock('ping', messages, errors, 0)
         });
 
         describe('When the command has run', function () {
             beforeEach(async function () {
-                const {completed, messages$} = spawn('ping', `-c 2 www.google.com`, nativeSpawnMock);
+                const {completed, messages$} = spawn('ping -c 2 www.google.com', nativeSpawnMock);
 
                 messages$.addListener({
                         next: (stdout) => {
@@ -48,18 +48,18 @@ describe('Given a command line command that will produce errors and valid inform
     });
 
     describe('And that command exits with a non-zero exit code', function () {
-        let nativeSpawnMock: SpawnFunc,
+        let nativeSpawnMock: NativeSpawnFunc,
             actual: Array<string> = [];
 
         beforeEach(function () {
-            nativeSpawnMock = createSpawnMock('ping', messages, errors, 124)
+            nativeSpawnMock = createNativeSpawnMock('ping', messages, errors, 124)
         });
 
         describe('When the command has run', function () {
             let result;
 
             beforeEach( function () {
-                result = spawn('ping', `-c 2 www.google.com`, nativeSpawnMock);
+                result = spawn('ping -c 2 www.google.com', nativeSpawnMock);
 
                 result.messages$.addListener({
                         next: (stdout) => {

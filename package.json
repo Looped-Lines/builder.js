@@ -44,12 +44,16 @@
     "remap-istanbul": "0.9.5",
     "request": "2.83.0",
     "request-promise-native": "1.0.5",
+    "sinon": "4.1.2",
+    "sinon-chai": "2.14.0",
     "ts-mockito": "2.2.7",
     "ts-node": "3.3.0",
     "typescript": "2.6.1"
   },
   "dependencies": {
     "@types/chai-as-promised": "^7.1.0",
+    "@types/sinon": "^4.0.0",
+    "@types/sinon-chai": "^2.7.29",
     "@types/ws": "^3.2.1",
     "express": "^4.16.2",
     "reflect-metadata": "0.1.10",

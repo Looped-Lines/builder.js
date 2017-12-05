@@ -1,7 +1,7 @@
 const {ChildProcess} = require('child_process');
 import {Readable} from 'stream';
 
-export function createSpawnMock(command: string, data: string[], errors: string[], exitCode: number){
+export function createNativeSpawnMock(command: string, data: string[], errors: string[], exitCode: number){
     let childDone = [];
     let mockedProcess = new ChildProcess();
 

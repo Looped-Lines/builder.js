@@ -2,13 +2,24 @@ import {SpawnOptions} from 'child_process';
 import xs, {default as Stream} from 'xstream';
 import {ChildProcess} from  'child_process';
 
-export interface SpawnFunc{
+export interface NativeSpawnFunc{
     (command: string, args?: string[], options?: SpawnOptions): ChildProcess;
 }
+export interface SpawnFunc{
+    (command: string, nativeSpawn: NativeSpawnFunc) : { messages$: Stream<string>, completed: Promise<void>}
+}
 
-export function spawn(command: string, args: string, nativeSpawn: SpawnFunc) : { messages$: Stream<string>, completed: Promise<void>} {
-    const argsArray: Array<string> = args.split(' ');
-    const childProcess = nativeSpawn(command, argsArray);
+function mapCommandStringToArgsAndApp(command: string) {
+    let commandArray: string[] = command.split(' ');
+    let app = commandArray[0];
+    let args: string[] = commandArray.slice(1, commandArray.length - 1);
+    return {app, args};
+}
+
+export function spawn(command: string, nativeSpawn: NativeSpawnFunc) : { messages$: Stream<string>, completed: Promise<void>} {
+    const {app, args} = mapCommandStringToArgsAndApp(command);
+
+    const childProcess = nativeSpawn(app, args);
 
     const messages$: Stream<string> = xs.create({
         start: listener => {

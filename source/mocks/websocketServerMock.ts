@@ -1,4 +1,3 @@
-import {Readable, Writable} from 'stream';
 import * as WebSocket from 'ws'
 import {EventEmitter} from 'events'
 
