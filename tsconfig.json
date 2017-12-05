@@ -11,7 +11,8 @@
   },
 
   "include": [
-    "source/**/*.ts"
+    "source/**/*.ts",
+    "config/**/*.ts"
   ],
 
   "exclude": [

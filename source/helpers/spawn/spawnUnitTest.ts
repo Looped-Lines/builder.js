@@ -1,9 +1,5 @@
-import {expect, use} from 'chai';
 import {spawn , SpawnFunc} from './spawn';
 import {createSpawnMock} from '../../mocks/spawnMock';
-import chaiAsPromised = require('chai-as-promised');
-
-use(chaiAsPromised);
 
 describe('Given a command line command that will produce errors and valid information', function () {
     let messages: Array<string> = [
