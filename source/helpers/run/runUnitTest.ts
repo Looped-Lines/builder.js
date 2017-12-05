@@ -9,6 +9,7 @@ import {WebSocketServerMockProxy} from "../../mocks/websocketServerMock";
 describe('Given a command line command', function () {
     describe('When run is executed with command', function () {
         let spawnSpy,
+            status,
             pushStreamThroughWebSocketConnectionsSpy,
             wss = new WebSocketServerMockProxy(),
             command = 'ping -c www.google.com',
@@ -33,7 +34,7 @@ describe('Given a command line command', function () {
 
             pushStreamThroughWebSocketConnectionsSpy = sinon.spy(pushStreamThroughWebSocketConnections);
 
-            run(command, spawnSpy, nativeSpawn, pushStreamThroughWebSocketConnectionsSpy, wss);
+            status = run(command, spawnSpy, nativeSpawn, pushStreamThroughWebSocketConnectionsSpy, wss);
         });
 
         it('Then it should execute the command', function () {
@@ -43,5 +44,9 @@ describe('Given a command line command', function () {
         it('Then it should send all the stderr and stdout messages through a Web Socket', function () {
             expect(pushStreamThroughWebSocketConnectionsSpy).to.have.been.calledWith(outgoingMessages$, wss)
         });
+
+        it('Then it should eventually return a promise resolved successfully indicating the end of the task', function () {
+            return expect(status).to.eventually.be.fulfilled
+        })
     })
 });

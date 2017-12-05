@@ -1,7 +1,7 @@
 const {ChildProcess} = require('child_process');
 import {Readable} from 'stream';
 
-export function createNativeSpawnMock(command: string, data: string[], errors: string[], exitCode: number){
+export function createNativeSpawnMock(command: string, data: string[], errors: string[], exitCode: number, exitError: string = null){
     let childDone = [];
     let mockedProcess = new ChildProcess();
 
@@ -24,7 +24,7 @@ export function createNativeSpawnMock(command: string, data: string[], errors: s
 
         if(childDone.includes('stderr') && childDone.includes('stdout'))
         {
-            mockedProcess.emit('close', exitCode);
+            mockedProcess.emit('close', exitCode, exitError);
         }
     });
 

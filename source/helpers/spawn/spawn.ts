@@ -12,13 +12,12 @@ export interface SpawnFunc{
 function mapCommandStringToArgsAndApp(command: string) {
     let commandArray: string[] = command.split(' ');
     let app = commandArray[0];
-    let args: string[] = commandArray.slice(1, commandArray.length - 1);
+    let args: string[] = commandArray.slice(1, commandArray.length);
     return {app, args};
 }
 
 export function spawn(command: string, nativeSpawn: NativeSpawnFunc) : { messages$: Stream<string>, completed: Promise<void>} {
     const {app, args} = mapCommandStringToArgsAndApp(command);
-
     const childProcess = nativeSpawn(app, args);
 
     const messages$: Stream<string> = xs.create({
@@ -36,9 +35,9 @@ export function spawn(command: string, nativeSpawn: NativeSpawnFunc) : { message
     });
 
     const completed = new Promise<void>(function (resolve, reject) {
-        childProcess.on('close', (exitCode) => {
+        childProcess.on('close', (exitCode, error) => {
             if(exitCode > 0){
-                reject();
+                reject(error);
             } else {
                 resolve()
             }

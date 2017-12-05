@@ -15,7 +15,8 @@ describe('Given a command line command that will produce errors and valid inform
             'error3',
             'error4',
             'error5'
-        ];
+        ],
+        exitError: string = 'Something really bad happened';
 
     describe('And that command exits with a zero exit code', function () {
         let nativeSpawnMock: NativeSpawnFunc,
@@ -52,7 +53,7 @@ describe('Given a command line command that will produce errors and valid inform
             actual: Array<string> = [];
 
         beforeEach(function () {
-            nativeSpawnMock = createNativeSpawnMock('ping', messages, errors, 124)
+            nativeSpawnMock = createNativeSpawnMock('ping', messages, errors, 124, exitError)
         });
 
         describe('When the command has run', function () {
@@ -73,14 +74,14 @@ describe('Given a command line command that will produce errors and valid inform
 
             it('Then it should have returned all the errors and messages as a single stream', async function () {
                 try {
-                    await result.completed
+                    await result.completed;
                 } catch {
                     expect(actual).to.deep.equal(messages.concat(errors))
                 }
             });
 
-            it('Then it should return a rejected promise', async function () {
-                await expect(result.completed).to.eventually.be.rejected
+            it('Then it should return a rejected promise', function () {
+                return expect(result.completed).to.eventually.be.rejectedWith(exitError);
             });
         });
     });
