@@ -14,7 +14,9 @@
     "url": "git+https://github.com/Looped-Lines/builder.js.git"
   },
   "author": "",
-
+  "bin": {
+    "builder": "build/local/bin/cli.js"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Looped-Lines/builder.js/issues"
