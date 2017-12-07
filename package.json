@@ -1,6 +1,6 @@
 {
-  "name": "@looped-lines/builder",
-  "version": "1.0.1",
+  "name": "@looped-lines/builderjs",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "directories": {
