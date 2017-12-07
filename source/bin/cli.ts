@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-import {gitClone} from '../steps/gitClone';
 import {run} from "../helpers/run/run";
 import * as WebSocket from 'ws';
 import {spawn as nativeSpawn} from 'child_process';
 import {spawn} from "../helpers/spawn/spawn";
 import {pushStreamThroughWebSocketConnections} from "../helpers/pushStreamThroughWebsocketConnections/pushStreamThroughWebSocketConnections";
 import {setupServer} from "../setup/setupServer";
+import {Steps} from "../steps/index";
 
 const express = require('express');
 const http = require('http');
@@ -15,7 +15,15 @@ async function bootstrap() {
 
     const {start} = require(process.argv[2]);
 
-    await start(gitClone, run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss);
+    try {
+        await start(Steps, run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss);
+    } finally {
+        server.close();
+    }
 }
 
-bootstrap();
+bootstrap().then(function (server) {
+    console.log('Done!!! Have a nice day')
+}).catch(function () {
+    console.log('Ooops someone made a boo boo, here is what we know', ...arguments)
+});

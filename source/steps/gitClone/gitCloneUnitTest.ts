@@ -1,11 +1,11 @@
-import {GitHubHelper} from '../helpers/gitHub';
+import {GitHubHelper} from '../../helpers/gitHub';
 import {gitClone} from './gitClone';
 import {pathExists} from 'fs-extra'
-import {run} from "../helpers/run/run";
+import {run} from "../../helpers/run/run";
 import * as WebSocket from 'ws';
 import {spawn as nativeSpawn} from 'child_process';
-import {spawn} from "../helpers/spawn/spawn";
-import {pushStreamThroughWebSocketConnections} from "../helpers/pushStreamThroughWebsocketConnections/pushStreamThroughWebSocketConnections";
+import {spawn} from "../../helpers/spawn/spawn";
+import {pushStreamThroughWebSocketConnections} from "../../helpers/pushStreamThroughWebsocketConnections/pushStreamThroughWebSocketConnections";
 
 const express = require('express');
 const http = require('http');
@@ -17,7 +17,7 @@ describe('Given a git repository', function () {
     const orgName = 'looped-lines-test-org',
         repoName = 'testrepo';
 
-    beforeEach(  async function () {
+    beforeEach(async function () {
         process.chdir('../');
         const gitHubHelper = new GitHubHelper();
         await gitHubHelper.createRepo(orgName, repoName)
