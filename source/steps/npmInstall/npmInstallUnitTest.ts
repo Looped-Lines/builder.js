@@ -1,4 +1,4 @@
-import * as fs from 'fs'
+import * as fs from 'fs';
 import {promisify} from "util";
 import {npmInstall} from "./npmInstall";
 import {run} from "../../helpers/run/run";
@@ -18,7 +18,7 @@ const mkdir = promisify(fs.mkdir);
 const exists = promisify(fs.exists);
 
 describe('Given a package.json file with dependencies', function () {
-    this.timeout(10000);
+    this.timeout(40000);
     let currentDir = process.cwd(),
         testWorkingDirectory;
 
@@ -53,7 +53,7 @@ describe('Given a package.json file with dependencies', function () {
                 });
 
                 await Promise.all(promises);
-            })
+            });
         });
 
         afterEach(function () {
