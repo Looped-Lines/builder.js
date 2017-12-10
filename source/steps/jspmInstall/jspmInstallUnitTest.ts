@@ -9,10 +9,8 @@ import {spawn} from "../../helpers/spawn/spawn";
 import {pushStreamThroughWebSocketConnections} from "../../helpers/pushStreamThroughWebsocketConnections/pushStreamThroughWebSocketConnections";
 import WritableStream = NodeJS.WritableStream;
 
-const express = require('express');
 const http = require('http');
-const app = express();
-const server = http.createServer(app);
+const server = http.createServer();
 
 describe('Given a package.json file with dependencies', function () {
     this.timeout(40000);

@@ -8,10 +8,8 @@ import {spawn as nativeSpawn} from 'child_process';
 import {spawn} from "../../helpers/spawn/spawn";
 import {pushStreamThroughWebSocketConnections} from "../../helpers/pushStreamThroughWebsocketConnections/pushStreamThroughWebSocketConnections";
 
-const express = require('express');
 const http = require('http');
-const app = express();
-const server = http.createServer(app);
+const server = http.createServer();
 
 const readFile = promisify(fs.readFile);
 const mkdir = promisify(fs.mkdir);

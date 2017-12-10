@@ -7,11 +7,10 @@ import {pushStreamThroughWebSocketConnections} from "../helpers/pushStreamThroug
 import {setupServer} from "../setup/setupServer";
 import {Steps} from "../steps/index";
 
-const express = require('express');
 const http = require('http');
 
 async function bootstrap() {
-    const {wss, server} = await setupServer(WebSocket.Server, express, http.createServer);
+    const {wss, server} = await setupServer(WebSocket.Server, http.createServer);
 
     const {start} = require(process.argv[2]);
 
