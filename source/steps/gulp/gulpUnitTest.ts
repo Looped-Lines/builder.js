@@ -1,4 +1,4 @@
-import {copyAsync, existsAsync} from 'fs-extra-promise';
+import {copyAsync, existsAsync, removeAsync} from 'fs-extra-promise';
 import * as fs from 'fs';
 import {promisify} from "util";
 import {npmInstall} from "../npmInstall/npmInstall";
@@ -48,12 +48,25 @@ describe('Given a gulp project with tasks', function () {
             });
         });
 
+        describe('When gulp is run on a non-existent task', function () {
+            let result;
+
+            beforeEach(async function () {
+                result = gulp('doMagic',run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss);
+            });
+
+            it('Then that should result in a rejected promise ', function (done) {
+                expect(result).to.be.eventually.rejected.notify(done)
+            });
+        });
+
         afterEach(function () {
             server.close();
         })
     });
 
-    afterEach(function () {
+    afterEach(async function () {
         process.chdir(currentDir);
+        await removeAsync(testWorkingDirectory)
     })
 });
