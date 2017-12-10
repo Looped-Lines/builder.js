@@ -1,0 +1,18 @@
+{
+  "name": "mocks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mocks.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@looped-lines-test-org/testpackage-a": "1.0.1",
+    "@looped-lines-test-org/testpackage-b": "1.0.1",
+    "@looped-lines-test-org/testpackage-c": "1.0.1",
+    "jspm": "^0.16.53",
+    "tough-cookie-filestore": "0.0.1"
+  }
+}
