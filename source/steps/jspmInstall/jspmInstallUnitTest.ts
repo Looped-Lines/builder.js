@@ -60,7 +60,7 @@ describe('Given a package.json file with dependencies', function () {
                 await Promise.all(promises);
             });
 
-            it('The it should set the auth token for github in the jspm config', async function () {
+            it('Then it should set the auth token for github in the jspm config', async function () {
                 const configJson = await readJsonAsync(`${process.env.HOME}/.jspm/config`);
                 expect(configJson.registries.github.auth).to.equal(process.env.GITHUB_JSPM_AUTH_TOKEN)
             })

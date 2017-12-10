@@ -4,5 +4,5 @@ import {PushStreamThroughWebSocketConnectionsFunc} from "../../helpers/pushStrea
 import WebSocket = require("ws");
 
 export function gitClone(orgName: string, repoName: string, run: RunFunc, spawn: SpawnFunc, nativeSpawn: NativeSpawnFunc, pushStreamThroughWebSocketConnections: PushStreamThroughWebSocketConnectionsFunc, wss: WebSocket.Server): Promise<void>{
-    return run(`git clone https://github.com/${orgName}/${repoName}.git --depth 1`, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss);
+    return run(`git clone git://github.com/${orgName}/${repoName}.git --depth 1`, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss);
 }

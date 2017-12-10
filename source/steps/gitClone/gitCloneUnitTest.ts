@@ -46,3 +46,36 @@ describe('Given a git repository', function () {
         })
     });
 });
+
+describe('Given a non existent git repo', function () {
+    beforeEach(function () {
+        process.chdir('../');
+    });
+
+    describe('And a Web Socket Server', function () {
+        let wss: WebSocket.Server;
+
+        beforeEach(function () {
+            wss = new WebSocket.Server({server});
+
+            server.listen(process.env.PORT || 8999, () => {
+            });
+        });
+
+        describe('When git clone is called', function () {
+            let result;
+
+            beforeEach( function(){
+                result = gitClone('fdfdsadfafd', 'fdafdsafsda', run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss);
+            });
+
+            it('Then is should return a rejected promise', function (done) {
+                expect(result).to.be.eventually.rejected.notify(done)
+            })
+        });
+
+        afterEach(function () {
+            server.close();
+        })
+    })
+});
