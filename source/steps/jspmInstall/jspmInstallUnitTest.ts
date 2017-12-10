@@ -20,11 +20,8 @@ describe('Given a package.json file with dependencies', function () {
         testWorkingDirectory;
 
     beforeEach(async function () {
-        testWorkingDirectory = `${currentDir}/../fakeModuleJspm`;
-        await mkdirAsync(testWorkingDirectory);
-        await copyAsync(`${currentDir}/source/mocks/package.json`, `${testWorkingDirectory}/package.json`);
-        await copyAsync(`${currentDir}/source/mocks/config.js`, `${testWorkingDirectory}/config.js`);
-        await copyAsync(`${currentDir}/source/mocks/config.js`, `${testWorkingDirectory}/config.js`);
+        testWorkingDirectory = `${currentDir}/../jspmFakeProject`;
+        await copyAsync(`${currentDir}/source/mocks/jspmFakeProject`, `${testWorkingDirectory}`);
         process.chdir(testWorkingDirectory);
     });
 

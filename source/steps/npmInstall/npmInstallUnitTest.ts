@@ -1,3 +1,4 @@
+import {copyAsync} from 'fs-extra-promise';
 import * as fs from 'fs';
 import {promisify} from "util";
 import {npmInstall} from "./npmInstall";
@@ -12,7 +13,6 @@ const http = require('http');
 const app = express();
 const server = http.createServer(app);
 
-const copyFile = promisify(fs.copyFile);
 const readFile = promisify(fs.readFile);
 const mkdir = promisify(fs.mkdir);
 const exists = promisify(fs.exists);
@@ -23,9 +23,9 @@ describe('Given a package.json file with dependencies', function () {
         testWorkingDirectory;
 
     beforeEach( async function () {
-        testWorkingDirectory = `${currentDir}/../fakeModule`;
+        testWorkingDirectory = `${currentDir}/../npmFakeProject`;
         await mkdir(testWorkingDirectory);
-        await copyFile(`${currentDir}/source/mocks/package.json`, `${testWorkingDirectory}/package.json`);
+        await copyAsync(`${currentDir}/source/mocks/npmFakeProject`, `${testWorkingDirectory}`);
         process.chdir(testWorkingDirectory);
     });
 
