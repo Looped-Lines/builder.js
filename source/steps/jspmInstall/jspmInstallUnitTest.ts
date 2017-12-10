@@ -1,4 +1,4 @@
-import {removeAsync, readJsonAsync, copyAsync, existsAsync} from 'fs-extra-promise'
+import {removeAsync, readJsonAsync, copyAsync, existsAsync, mkdirAsync} from 'fs-extra-promise'
 import {createWriteStream} from 'fs'
 import {resolve} from  'path';
 import {jspmInstall} from "./jspmInstall";
@@ -47,7 +47,7 @@ describe('Given a jspm project with a package.json and config file declaring its
 
         describe('When jspm install is run', function () {
             beforeEach(async function () {
-                await jspmInstall(process.env.GITHUB_JSPM_AUTH_TOKEN, run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss, readJsonAsync);
+                await jspmInstall(process.env.GITHUB_JSPM_AUTH_TOKEN, run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss, readJsonAsync, existsAsync);
             });
 
             it('Then it should install those dependencies', async function () {
@@ -103,11 +103,53 @@ describe(`Given a non jspm project`, function(){
             let promise;
 
             beforeEach(async function () {
-                 promise = jspmInstall(process.env.GITHUB_JSPM_AUTH_TOKEN, run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss, readJsonAsync);
+                 promise = jspmInstall(process.env.GITHUB_JSPM_AUTH_TOKEN, run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss, readJsonAsync, existsAsync);
             });
 
             it('Then an error indicating that it\'s not a jspm project should be thrown', async function () {
-                await expect(promise).to.be.eventually.rejectedWith('Project is not a jspm project');
+                await expect(promise).to.be.eventually.rejectedWith('Project is not a jspm project, no jspm details in package.json');
+            })
+        });
+
+        afterEach( function () {
+            server.close();
+        });
+    });
+
+    afterEach( async function () {
+        process.chdir(currentDir);
+        await removeAsync(testWorkingDirectory)
+    })
+});
+
+describe(`Given an empty project`, function () {
+    let testWorkingDirectory;
+
+    beforeEach(async function () {
+        testWorkingDirectory = `${currentDir}/../nonJspmFakeProject`;
+        await mkdirAsync(`${testWorkingDirectory}`);
+        process.chdir(testWorkingDirectory);
+    });
+
+    describe('And a Web Socket Server', function () {
+        let wss: WebSocket.Server;
+
+        beforeEach(async function () {
+            wss = new WebSocket.Server({server});
+
+            server.listen(process.env.PORT || 8999, () => {
+            });
+        });
+
+        describe('When jspm install is run', function () {
+            let promise;
+
+            beforeEach(async function () {
+                promise = jspmInstall(process.env.GITHUB_JSPM_AUTH_TOKEN, run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss, readJsonAsync, existsAsync);
+            });
+
+            it('Then an error indicating that it\'s not a jspm project should be thrown', async function () {
+                await expect(promise).to.be.eventually.rejectedWith('Project is not a jspm project, no package json');
             })
         });
 
