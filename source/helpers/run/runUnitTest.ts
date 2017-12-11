@@ -6,47 +6,94 @@ import xs from 'xstream';
 import WebSocket = require("ws");
 import {WebSocketServerMockProxy} from "../../mocks/websocketServerMock";
 
-describe('Given a command line command', function () {
-    describe('When run is executed with command', function () {
-        let spawnSpy,
-            status,
-            pushStreamThroughWebSocketConnectionsSpy,
-            wss = new WebSocketServerMockProxy(),
-            command = 'ping -c www.google.com',
-            outgoingMessages$ = xs.fromArray([
-                'message1',
-                'message2'
-            ]);
+describe('UNIT UNDER TEST: run', function () {
+    describe('Given a Web Socket Server', function () {
+        const wss = new WebSocketServerMockProxy();
+        const outgoingMessages$ = xs.fromArray([
+            'message1',
+            'message2'
+        ]);
 
-        beforeEach(function(){
-            function spawn(command: string, nativeSpawn: NativeSpawnFunc) : { messages$: Stream<string>, completed: Promise<void>} {
-                return {
-                    messages$ : outgoingMessages$,
-                    completed : new Promise(resolve => resolve())
-                }
-            }
+        describe('And a valid command line command', function () {
+            let spawnMock,
+                pushStreamThroughWebSocketConnectionsMock;
 
-            function pushStreamThroughWebSocketConnections(outgoingMessages$: Stream<string>, WebSockServer: WebSocket.Server): void{
+            beforeEach(function () {
+                spawnMock = createSpawnMock(outgoingMessages$);
+                pushStreamThroughWebSocketConnectionsMock = createPushStreamThroughWebSocketConnectionsMock();
+            });
 
-            }
+            describe('When run is executed with the command', function () {
+                let promise,
+                    command = 'valid command';
 
-            spawnSpy = sinon.spy(spawn);
+                beforeEach(function () {
+                    promise = run(command, spawnMock, nativeSpawn, pushStreamThroughWebSocketConnectionsMock, wss);
+                });
 
-            pushStreamThroughWebSocketConnectionsSpy = sinon.spy(pushStreamThroughWebSocketConnections);
+                it('Then it should execute the command', function () {
+                    expect(spawnMock).to.have.been.calledWith(command, nativeSpawn);
+                });
 
-            status = run(command, spawnSpy, nativeSpawn, pushStreamThroughWebSocketConnectionsSpy, wss);
+                it('Then it should send all the stderr and stdout messages through a Web Socket', function () {
+                    expect(pushStreamThroughWebSocketConnectionsMock).to.have.been.calledWith(outgoingMessages$, wss)
+                });
+
+                it('Then it should eventually return a promise resolved successfully indicating the end of the command execution', function () {
+                    return expect(promise).to.eventually.be.fulfilled
+                })
+            })
         });
 
-        it('Then it should execute the command', function () {
-            expect(spawnSpy).to.have.been.calledWith(command, nativeSpawn);
-        });
+        describe('And an invalid command', function () {
+            const error = new Error('this is an error');
+            let spawnMock,
+                pushStreamThroughWebSocketConnectionsMock;
 
-        it('Then it should send all the stderr and stdout messages through a Web Socket', function () {
-            expect(pushStreamThroughWebSocketConnectionsSpy).to.have.been.calledWith(outgoingMessages$, wss)
-        });
+            beforeEach(function () {
+                spawnMock = createSpawnMock(outgoingMessages$, error);
+                pushStreamThroughWebSocketConnectionsMock = createPushStreamThroughWebSocketConnectionsMock();
+            });
 
-        it('Then it should eventually return a promise resolved successfully indicating the end of the task', function () {
-            return expect(status).to.eventually.be.fulfilled
+            describe('When run is executed with the command', function () {
+                let promise,
+                    command = 'invalid command';
+
+                beforeEach(function () {
+                    promise = run(command, spawnMock, nativeSpawn, pushStreamThroughWebSocketConnectionsMock, wss);
+                });
+
+                it('Then it should return a rejected promise with an error', async function () {
+                    await expect(promise).to.be.eventually.rejectedWith(error)
+                })
+            })
         })
-    })
+    });
 });
+
+function createSpawnMock(messages$: Stream<string>, error?: Error) {
+    function spawn(command: string, nativeSpawn: NativeSpawnFunc): { messages$: Stream<string>, completed: Promise<Error> } {
+        let completed = new Promise<Error>((resolve, reject) => {
+            if (error) {
+                reject(error)
+            } else {
+                resolve()
+            }
+        });
+
+        return {
+            messages$,
+            completed
+        }
+    }
+
+    return sinon.spy(spawn);
+}
+
+function createPushStreamThroughWebSocketConnectionsMock() {
+    function pushStreamThroughWebSocketConnections(outgoingMessages$: Stream<string>, WebSockServer: WebSocket.Server): void {
+
+    }
+
+    return sinon.spy(pushStreamThroughWebSocketConnections)
+}
