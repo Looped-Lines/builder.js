@@ -32,7 +32,7 @@ describe('Given a gulp project with tasks', function () {
         beforeEach(async function () {
             wss = new WebSocket.Server({server});
 
-            await npmInstall(run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss);
+            await npmInstall(run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss, existsAsync);
 
             server.listen(process.env.PORT || 8999, () => {
             });

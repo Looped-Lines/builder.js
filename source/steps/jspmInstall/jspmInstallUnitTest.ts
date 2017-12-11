@@ -111,8 +111,8 @@ describe('UNIT UNDER TEST: jspmInstall', function () {
                     promise = jspmInstall(process.env.GITHUB_JSPM_AUTH_TOKEN, run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss, readJsonAsync, existsAsync);
                 });
 
-                it('Then an error indicating that it\'s not a jspm project should be thrown', async function () {
-                    await expect(promise).to.be.eventually.rejectedWith('Project is not a jspm project, no package json');
+                it('Then it should throw an error indicating that the package.json cannot be found', async function () {
+                    await expect(promise).to.be.eventually.rejectedWith('Cannot find a package.json file');
                 })
             });
 
