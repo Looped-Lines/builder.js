@@ -1,7 +1,7 @@
 import {spawn , NativeSpawnFunc} from './spawn';
 import {createNativeSpawnMock} from '../../mocks/nativeSpawnMock';
 
-describe('Given a command line command that will produce errors and valid information', function () {
+describe('Given a command line command that will produce messages via stdout and stderr', function () {
     let messages: Array<string> = [
             'message1',
             'message2',
@@ -42,13 +42,13 @@ describe('Given a command line command that will produce errors and valid inform
                 await completed;
             });
 
-            it('Then it should have returned all the errors and messages as a single stream', function () {
+            it('Then it should have returned all the message from stdout and stderr in a single stream', function () {
                 expect(actual).to.deep.equal(messages.concat(errors))
             });
         })
     });
 
-    describe('And that command exits with a non-zero exit code', function () {
+    describe('And that command exits with a non-zero exit code and error message', function () {
         let nativeSpawnMock: NativeSpawnFunc,
             actual: Array<string> = [];
 
@@ -72,7 +72,7 @@ describe('Given a command line command that will produce errors and valid inform
                 );
             });
 
-            it('Then it should have returned all the errors and messages as a single stream', async function () {
+            it('Then it should have returned all the message from stdout and stderr in a single stream', async function () {
                 try {
                     await result.completed;
                 } catch {

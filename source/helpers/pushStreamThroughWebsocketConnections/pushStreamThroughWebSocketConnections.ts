@@ -5,8 +5,8 @@ export interface PushStreamThroughWebSocketConnectionsFunc{
     (outgoingMessages$: Stream<string>, WebSockServer: WebSocket.Server) : void
 }
 
-export function pushStreamThroughWebSocketConnections(outgoingMessages$: Stream<string>, WebSockServer: WebSocket.Server): void{
-    WebSockServer.on('connection', (ws: WebSocket) => {
+export function pushStreamThroughWebSocketConnections(outgoingMessages$: Stream<string>, wss: WebSocket.Server): void{
+    wss.on('connection', (ws: WebSocket) => {
         outgoingMessages$.addListener({
             next: (message) => {
                 ws.send(message)

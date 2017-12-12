@@ -28,16 +28,6 @@ describe('UNIT UNDER TEST: jspmInstall', function () {
                 testWorkingDirectory = `${currentDir}/../jspmFakeProject`;
                 await copyAsync(`${currentDir}/source/mocks/jspmFakeProject`, `${testWorkingDirectory}`);
                 process.chdir(testWorkingDirectory);
-
-                // writeStream = createWriteStream(`${currentDir}/source/mocks/jspmInstallTestOutput.txt`);
-
-                // ws = new WebSocket('ws://localhost:8999');
-                //
-                // ws.on('message', function (message) {
-                //     console.log(message)
-                //     writeStream.write(message.toString(), 'UTF-8');
-                // });
-
             });
 
             describe('When jspm install is run', function () {
