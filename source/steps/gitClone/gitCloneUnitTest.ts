@@ -1,4 +1,3 @@
-import {GitHubHelper} from '../../helpers/gitHub';
 import {gitClone} from './gitClone';
 import {pathExists} from 'fs-extra'
 import {run} from "../../helpers/run/run";
@@ -6,19 +5,21 @@ import * as WebSocket from 'ws';
 import {spawn as nativeSpawn} from 'child_process';
 import {spawn} from "../../helpers/spawn/spawn";
 import {pushStreamThroughWebSocketConnections} from "../../helpers/pushStreamThroughWebsocketConnections/pushStreamThroughWebSocketConnections";
+import {removeAsync, mkdirAsync} from "fs-extra-promise";
 
 const http = require('http');
 const server = http.createServer();
+const currentDir = process.cwd();
 
 describe('Given a git repository', function () {
+    const testWorkingDirectory = `${currentDir}/../testWorkingDirectory`;
     this.timeout(10000);
     const orgName = 'looped-lines-test-org',
         repoName = 'testrepo';
 
     beforeEach(async function () {
-        process.chdir('../');
-        const gitHubHelper = new GitHubHelper();
-        await gitHubHelper.createRepo(orgName, repoName)
+        await mkdirAsync(`${testWorkingDirectory}`);
+        process.chdir(testWorkingDirectory);
     });
 
     describe('And a Web Socket Server', function () {
@@ -45,12 +46,14 @@ describe('Given a git repository', function () {
             server.close();
         })
     });
+
+    afterEach(async function () {
+        process.chdir(currentDir);
+        await removeAsync(testWorkingDirectory)
+    })
 });
 
 describe('Given a non existent git repo', function () {
-    beforeEach(function () {
-        process.chdir('../');
-    });
 
     describe('And a Web Socket Server', function () {
         let wss: WebSocket.Server;
