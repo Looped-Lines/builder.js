@@ -1,28 +1,17 @@
 #!/usr/bin/env node
 import {run} from "../helpers/run/run";
-import * as WebSocket from 'ws';
 import {spawn as nativeSpawn} from 'child_process';
 import {spawn} from "../helpers/spawn/spawn";
 import {pushStreamThroughWebSocketConnections} from "../helpers/pushStreamThroughWebsocketConnections/pushStreamThroughWebSocketConnections";
 import {setupServer} from "../setup/setupServer";
 import {Steps} from "../steps/index";
+import {main} from "./main";
+import {existsAsync, readJsonAsync} from "fs-extra-promise";
+import {createServer} from "http";
+import {Server} from "ws";
 
-const http = require('http');
-
-async function bootstrap() {
-    const {wss, server} = await setupServer(WebSocket.Server, http.createServer);
-
-    const {start} = require(process.argv[2]);
-
-    try {
-        await start(Steps, run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, wss);
-    } finally {
-        server.close();
-    }
-}
-
-bootstrap().then(function (server) {
-    console.log('Done!!! Have a nice day')
-}).catch(function () {
-    console.log('Ooops someone made a boo boo, here is what we know', ...arguments)
-});
+main(Steps, run, spawn, nativeSpawn, pushStreamThroughWebSocketConnections, Server, createServer, setupServer, require, process.argv, existsAsync, readJsonAsync)
+    .catch(function (error) {
+        if (error)
+            console.log(error)
+    });
